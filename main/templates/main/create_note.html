@@ -1,0 +1,143 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% if form.instance.pk %}Edit{% else %}Upload{% endif %} Note - CampusMeet</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f8fafc;
+      color: #333;
+      margin: 0;
+      min-height: 100vh;
+      padding: 25px 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      color: #2980b9;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 1.3rem;
+      font-size: 1.5rem;
+      text-align: center;
+      width: 100%;
+      max-width: 480px;
+      user-select: none;
+    }
+    form {
+      width: 100%;
+      max-width: 480px;
+      display: grid;
+      grid-template-columns: 30% 1fr;
+      grid-gap: 0.8rem 1rem;
+      align-items: center;
+    }
+    label {
+      font-weight: 700;
+      color: #2980b9;
+      font-size: 0.9rem;
+      user-select: none;
+      justify-self: end;
+    }
+    input[type="text"],
+    select,
+    textarea,
+    input[type="file"] {
+      border-radius: 7px;
+      border: 1.8px solid #ddd;
+      padding: 0.35rem 0.8rem;
+      font-size: 0.9rem;
+      box-sizing: border-box;
+      max-width: 280px;
+      width: 100%;
+      transition: border-color 0.3s ease;
+      font-family: inherit;
+      justify-self: start;
+    }
+    input[type="text"]:focus,
+    select:focus,
+    textarea:focus,
+    input[type="file"]:focus {
+      outline: none;
+      border-color: #2980b9;
+      box-shadow: 0 0 7px rgba(41, 128, 185, 0.45);
+    }
+    textarea {
+      resize: vertical;
+      min-height: 75px;
+    }
+    .file-input-wrapper {
+      grid-column: 1 / 3;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    button {
+      grid-column: 2 / 3;
+      justify-self: start;
+      background-color: #2980b9;
+      border: none;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 0.48rem 1.8rem;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      box-shadow: 0 7px 22px rgba(41, 128, 185, 0.5);
+      user-select: none;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #1c5980;
+    }
+    a.back-link {
+      grid-column: 1 / 3;
+      margin-top: 1.8rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-align: left;
+      color: #2980b9;
+      text-decoration: none;
+      user-select: none;
+      transition: color 0.3s ease;
+    }
+    a.back-link:hover {
+      color: #1c5980;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>{% if form.instance.pk %}Edit{% else %}Upload{% endif %} Note</h1>
+  <form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    <label for="{{ form.title.id_for_label }}">Title</label>
+    {{ form.title }}
+
+    <label for="{{ form.subject.id_for_label }}">Subject</label>
+    {{ form.subject }}
+
+    <label for="{{ form.content.id_for_label }}">Content</label>
+    {{ form.content }}
+
+    <div class="file-input-wrapper">
+      <label for="{{ form.file.id_for_label }}">Select File</label>
+      {{ form.file }}
+    </div>
+
+    <button type="submit" aria-label="Save Note">{% if form.instance.pk %}Update{% else %}Upload{% endif %}</button>
+  </form>
+  <a href="{% url 'faculty_notes' %}" class="back-link" aria-label="Back to Notes">← Back to Notes</a>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

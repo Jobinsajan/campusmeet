@@ -1,0 +1,124 @@
+{% extends 'main/base_admin.html' %}
+
+{% block extra_css %}
+<style>
+  .dashboard-container {
+    max-width: 960px;
+    margin: 40px auto;
+  }
+  h1 {
+    font-weight: 700;
+    color: #343a40;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+  }
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+  @media (max-width: 900px) {
+    .cards-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 600px) {
+    .cards-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .card {
+    padding: 16px 20px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    border: 1px solid #e0e0e0;
+    background-color: #fff;
+    color: #333;
+    transition: all 0.25s ease;
+    min-height: 130px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: default;
+  }
+  .card:hover {
+    box-shadow: 0 8px 25px rgba(0,0,0,0.14);
+    transform: translateY(-4px);
+  }
+  .card h4 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .card p {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+  .btn {
+    font-weight: 600;
+    letter-spacing: 1px;
+    padding: 8px 22px;
+    font-size: 0.87rem;
+  }
+  .btn:hover {
+    opacity: 0.9;
+  }
+
+  /* Sidebar nav link larger */
+  nav.sidebar ul.nav li.nav-item > a.nav-link {
+    font-size: 1.22rem;
+    font-weight: 600;
+  }
+
+  /* Background colors adjusted for reduced saturation */
+  .bg-primary { background-color: #a4c1ff; color: #084298; }
+  .bg-secondary { background-color: #b8bac0; color: #41464b; }
+  .bg-success { background-color: #a2d2aa; color: #0f5132; }
+  .bg-info { background-color: #9fe3f9; color: #055160; }
+  .bg-warning { background-color: #fff6b9; color: #664d03; }
+  .bg-danger { background-color: #f7a2a2; color: #842029; }
+  .bg-dark { background-color: #9ea1a6; color: #495057; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+  <h1>Admin Dashboard</h1>
+  <div class="cards-grid">
+    <div class="card bg-primary text-center">
+      <h4>Users</h4>
+      <p>{{ user_count }}</p>
+      <a href="{% url 'admin_users' %}" class="btn btn-light btn-sm">Manage Users</a>
+    </div>
+    <div class="card bg-secondary text-center">
+      <h4>Departments</h4>
+      <p>{{ dept_count }}</p>
+      <a href="{% url 'admin_departments' %}" class="btn btn-light btn-sm">Manage Departments</a>
+    </div>
+    <div class="card bg-success text-center">
+      <h4>Subjects</h4>
+      <p>{{ subject_count }}</p>
+      <a href="{% url 'admin_subjects' %}" class="btn btn-light btn-sm">Manage Subjects</a>
+    </div>
+    <div class="card bg-info text-center">
+      <h4>Meetings</h4>
+      <p>{{ meeting_count }}</p>
+      <a href="{% url 'admin_meetings' %}" class="btn btn-light btn-sm">Manage Meetings</a>
+    </div>
+    <div class="card bg-warning text-center">
+      <h4>Notes</h4>
+      <p>{{ note_count }}</p>
+      <a href="{% url 'admin_notes' %}" class="btn btn-light btn-sm">Manage Notes</a>
+    </div>
+    <div class="card bg-danger text-center">
+      <h4>Attendance</h4>
+      <p>{{ attendance_count }}</p>
+      <a href="{% url 'admin_attendance' %}" class="btn btn-light btn-sm">View Attendance</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

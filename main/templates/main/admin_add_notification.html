@@ -1,0 +1,64 @@
+{% extends 'main/base_admin.html' %}
+
+{% block title %}
+    {% if notification %}Edit{% else %}Add{% endif %} Notification
+{% endblock %}
+
+{% block extra_css %}
+<style>
+  .form-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 30px 40px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(149, 157, 165, 0.2);
+    transition: box-shadow 0.3s ease-in-out;
+  }
+  .form-container:hover {
+    box-shadow: 0 12px 40px rgba(149, 157, 165, 0.3);
+  }
+  h1 {
+    font-weight: 700;
+    color: #343a40;
+    margin-bottom: 25px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  .btn-primary {
+    font-weight: 600;
+    letter-spacing: 1px;
+    padding: 12px;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+  <h1>{% if notification %}Edit{% else %}Add{% endif %} Notification</h1>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    <div class="mb-4">
+      <label for="id_recipient" class="form-label fw-semibold">Recipient</label>
+      <select id="id_recipient" name="recipient" class="form-select form-select-lg shadow-sm" required>
+        {% for user in users %}
+          <option value="{{ user.id }}" {% if notification and notification.recipient.id == user.id %}selected{% endif %}>{{ user.username }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="mb-4">
+      <label for="id_message" class="form-label fw-semibold">Message</label>
+      <textarea id="id_message" name="message" class="form-control form-control-lg shadow-sm" required>{{ notification.message|default_if_none:'' }}</textarea>
+    </div>
+    <div class="mb-5">
+      <label for="id_read" class="form-label fw-semibold">Read Status</label>
+      <select id="id_read" name="read" class="form-select form-select-lg shadow-sm" required>
+        <option value="True" {% if notification and notification.read %}selected{% endif %}>Read</option>
+        <option value="False" {% if notification and not notification.read %}selected{% endif %}>Unread</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary w-100 shadow-lg">{% if notification %}Update{% else %}Create{% endif %}</button>
+  </form>
+</div>
+{% endblock %}

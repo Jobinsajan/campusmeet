@@ -1,0 +1,66 @@
+{% extends 'main/base_admin.html' %}
+
+{% block title %}
+    {% if subject %}Edit{% else %}Add{% endif %} Subject
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-container {
+        max-width: 600px;
+        margin: 30px auto;
+        padding: 30px 40px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgb(149 157 165 / 20%);
+        transition: box-shadow 0.3s ease-in-out;
+    }
+    .form-container:hover {
+        box-shadow: 0 12px 40px rgb(149 157 165 / 30%);
+    }
+    .btn-primary {
+        font-weight: 600;
+        letter-spacing: 1px;
+        padding: 12px;
+    }
+    h1 {
+        font-weight: 700;
+        color: #343a40;
+        margin-bottom: 25px;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h1>{% if subject %}Edit{% else %}Add{% endif %} Subject</h1>
+    <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="mb-4">
+            <label for="id_name" class="form-label fw-semibold">Name</label>
+            <input id="id_name" name="name" type="text" class="form-control form-control-lg shadow-sm" 
+                value="{{ subject.name|default_if_none:'' }}" required placeholder="Enter subject name">
+        </div>
+        <div class="mb-4">
+            <label for="id_department" class="form-label fw-semibold">Department</label>
+            <select id="id_department" name="department" class="form-select form-select-lg shadow-sm" required>
+                {% for dept in departments %}
+                <option value="{{ dept.id }}" {% if subject and subject.department.id == dept.id %}selected{% endif %}>{{ dept.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-5">
+            <label for="id_faculty" class="form-label fw-semibold">Faculty</label>
+            <select id="id_faculty" name="faculty" class="form-select form-select-lg shadow-sm" required>
+                {% for fac in faculty %}
+                <option value="{{ fac.user.id }}" {% if subject and subject.faculty.id == fac.user.id %}selected{% endif %}>{{ fac.user.username }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary w-100 shadow-lg">{% if subject %}Update{% else %}Create{% endif %}</button>
+    </form>
+</div>
+{% endblock %}

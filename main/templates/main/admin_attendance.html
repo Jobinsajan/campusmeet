@@ -1,0 +1,70 @@
+{% extends 'main/base_admin.html' %}
+
+{% block title %}Attendance Records{% endblock %}
+
+{% block extra_css %}
+<style>
+    .table-container {
+        max-width: 1100px;
+        margin: 30px auto;
+        padding: 20px 30px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(149, 157, 165, 0.2);
+        transition: box-shadow 0.3s ease-in-out;
+    }
+    .table-container:hover {
+        box-shadow: 0 12px 40px rgba(149, 157, 165, 0.3);
+    }
+    h1 {
+        font-weight: 700;
+        color: #343a40;
+        margin-bottom: 25px;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+    table {
+        font-size: 0.9rem;
+    }
+    th, td {
+        vertical-align: middle !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="table-container">
+    <h1>Attendance Records</h1>
+    <table class="table table-striped table-bordered align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Student</th>
+                <th scope="col">Meeting</th>
+                <th scope="col">Present</th>
+                <th scope="col">Join Time</th>
+                <th scope="col">Leave Time</th>
+                <th scope="col">Duration</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in attendance_records %}
+            <tr>
+                <td>{{ record.id }}</td>
+                <td>{{ record.student.username }}</td>
+                <td>{{ record.meeting.subject.name }}</td>
+                <td>{{ record.present }}</td>
+                <td>{{ record.join_time|date:'Y-m-d H:i:s' }}</td>
+                <td>{{ record.leave_time|date:'Y-m-d H:i:s' }}</td>
+                <td>{{ record.duration }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center fst-italic">No attendance records.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

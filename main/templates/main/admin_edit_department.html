@@ -1,0 +1,50 @@
+{% extends 'main/base_admin.html' %}
+
+{% block title %}
+    {% if department %}Edit{% else %}Add{% endif %} Department
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-container {
+        max-width: 450px;
+        margin: 40px auto;
+        padding: 30px 35px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(149, 157, 165, 0.2);
+        transition: box-shadow 0.3s ease-in-out;
+    }
+    .form-container:hover {
+        box-shadow: 0 12px 40px rgba(149, 157, 165, 0.3);
+    }
+    .btn-primary {
+        font-weight: 600;
+        letter-spacing: 1.2px;
+        padding: 12px;
+    }
+    h1 {
+        font-weight: 700;
+        color: #343a40;
+        margin-bottom: 25px;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h1>{% if department %}Edit{% else %}Add{% endif %} Department</h1>
+    <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="mb-4">
+            <label for="id_name" class="form-label fw-semibold">Name</label>
+            <input id="id_name" name="name" type="text" class="form-control form-control-lg shadow-sm" 
+                value="{{ department.name|default_if_none:'' }}" required placeholder="Enter department name">
+        </div>
+        <button type="submit" class="btn btn-primary w-100 shadow-lg">{% if department %}Update{% else %}Create{% endif %}</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends "main/faculty_dashboard.html" %}
+
+{% block content %}
+  <h2 class="mb-4" style="color: #2980b9; font-weight: 700;">Faculty Notes</h2>
+
+  <form method="get" action="" class="d-flex mb-4" role="search" aria-label="Search notes">
+    <input 
+      class="form-control me-2" 
+      type="search" 
+      name="q" 
+      value="{{ query|default_if_none:'' }}" 
+      placeholder="Search notes by title" 
+      aria-label="Search notes"
+      style="max-width: 300px;"
+    >
+    <button class="btn btn-primary" type="submit" aria-label="Search notes">
+      <i class="bi bi-search"></i> Search
+    </button>
+  </form>
+
+  <div class="mb-4">
+    <a href="{% url 'create_note' %}" class="btn btn-success">
+      <i class="bi bi-upload"></i> Upload New Note
+    </a>
+  </div>
+
+  {% if notes %}
+    <div class="table-responsive">
+      <table class="table table-hover table-bordered align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Title</th>
+            <th>Subject</th>
+            <th>Created At</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for note in notes %}
+          <tr>
+            <td>{{ note.title }}</td>
+            <td>{{ note.subject.name }}</td>
+            <td>{{ note.created_at|date:"Y-m-d H:i" }}</td>
+            <td>
+              <a href="{% url 'edit_note' note.id %}" class="btn btn-sm btn-outline-primary me-1" aria-label="Edit note">
+                <i class="bi bi-pencil-square"></i> Edit
+              </a>
+              <a href="{% url 'delete_note' note.id %}" class="btn btn-sm btn-outline-danger" aria-label="Delete note">
+                <i class="bi bi-trash"></i> Delete
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="alert alert-info mt-4" role="alert">
+      No notes matched your search.
+    </div>
+  {% endif %}
+
+  <div class="mt-4">
+    <a href="{% url 'faculty_dashboard' %}" class="btn btn-secondary" aria-label="Back to Dashboard">
+      <i class="bi bi-arrow-left"></i> Back to Dashboard
+    </a>
+  </div>
+{% endblock %}

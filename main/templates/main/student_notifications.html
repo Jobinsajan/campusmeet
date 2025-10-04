@@ -1,0 +1,16 @@
+{% extends "main/base.html" %}
+{% block content %}
+<h2>Your Notifications</h2>
+{% if notifications %}
+<ul class="list-group">
+  {% for notification in notifications %}
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    <div>{{ notification.message }}</div>
+    <small class="text-muted">{{ notification.created_at|timesince }} ago</small>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>No notifications yet.</p>
+{% endif %}
+{% endblock %}

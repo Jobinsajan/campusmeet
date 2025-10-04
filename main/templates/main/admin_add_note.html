@@ -1,0 +1,70 @@
+{% extends 'main/base_admin.html' %}
+
+{% block title %}
+    {% if note %}Edit{% else %}Add{% endif %} Note
+{% endblock %}
+
+{% block extra_css %}
+<style>
+  .form-container {
+    max-width: 650px;
+    margin: 40px auto;
+    padding: 30px 40px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(149, 157, 165, 0.2);
+    transition: box-shadow 0.3s ease-in-out;
+  }
+  .form-container:hover {
+    box-shadow: 0 12px 40px rgba(149, 157, 165, 0.3);
+  }
+  h1 {
+    font-weight: 700;
+    color: #343a40;
+    margin-bottom: 25px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  .btn-primary {
+    font-weight: 600;
+    letter-spacing: 1px;
+    padding: 12px;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+  <h1>{% if note %}Edit{% else %}Add{% endif %} Note</h1>
+  <form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    <div class="mb-4">
+      <label for="id_title" class="form-label fw-semibold">Title</label>
+      <input id="id_title" name="title" type="text" class="form-control form-control-lg shadow-sm" 
+             value="{{ note.title|default_if_none:'' }}" required placeholder="Enter note title">
+    </div>
+    <div class="mb-4">
+      <label for="id_content" class="form-label fw-semibold">Content</label>
+      <textarea id="id_content" name="content" class="form-control form-control-lg shadow-sm" 
+                rows="5" placeholder="Enter note content">{{ note.content|default_if_none:'' }}</textarea>
+    </div>
+    <div class="mb-4">
+      <label for="id_subject" class="form-label fw-semibold">Subject</label>
+      <select id="id_subject" name="subject" class="form-select form-select-lg shadow-sm" required>
+        {% for subj in subjects %}
+          <option value="{{ subj.id }}" {% if note and note.subject.id == subj.id %}selected{% endif %}>{{ subj.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="mb-4">
+      <label for="id_file" class="form-label fw-semibold">File Attachment</label>
+      <input id="id_file" name="file" type="file" class="form-control form-control-lg shadow-sm">
+      {% if note.file %}
+        <p class="mt-2">Current: <a href="{{ note.file.url }}" target="_blank" class="text-decoration-none">{{ note.file.name }}</a></p>
+      {% endif %}
+    </div>
+    <button type="submit" class="btn btn-primary w-100 shadow-lg">{% if note %}Update{% else %}Create{% endif %}</button>
+  </form>
+</div>
+{% endblock %}

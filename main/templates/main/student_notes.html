@@ -1,0 +1,18 @@
+{% extends "main/base.html" %}
+{% block content %}
+<h2>Your Notes</h2>
+{% if notes %}
+<ul class="list-group">
+  {% for note in notes %}
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    <div>{{ note.title }} <small class="text-muted">({{ note.created_at|date:"Y-m-d H:i" }})</small></div>
+    {% if note.file %}
+    <a href="{{ note.file.url }}" download class="btn btn-sm btn-outline-primary">Download</a>
+    {% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>No notes available.</p>
+{% endif %}
+{% endblock %}

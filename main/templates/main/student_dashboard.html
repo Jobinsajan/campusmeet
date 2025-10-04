@@ -1,0 +1,282 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Student Dashboard - CampusMeet</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <style>
+    body, html {
+      margin: 0; padding: 0; height: 100%;
+      font-family: 'Poppins', Arial, sans-serif;
+      background-color: #f8fafc;
+      min-height: 100vh;
+    }
+    nav.navbar {
+      background-color: #2980b9;
+      height: 56px;
+      padding: 0.5rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      user-select: none;
+    }
+    nav.navbar .navbar-brand {
+      font-weight: 900;
+      font-size: 1.5rem;
+      color: white;
+    }
+    nav.navbar .logout-btn {
+      background: transparent;
+      border: none;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    nav.navbar .logout-btn:hover {
+      color: #d4d4d4;
+      text-decoration: underline;
+    }
+    #sidebar {
+      position: fixed;
+      top: 56px;
+      left: 0;
+      width: 260px;
+      height: calc(100% - 56px);
+      background: #fff;
+      border-right: 1px solid #ededed;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+      padding-top: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-y: auto;
+      z-index: 1030;
+    }
+    .sidebar-profile {
+      text-align: center;
+      margin-bottom: 30px;
+      width: 200px;
+    }
+    .sidebar-profile img {
+      width: 110px;
+      height: 110px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid #2980b9;
+      margin-bottom: 12px;
+    }
+    .sidebar-profile .username {
+      font-weight: 700;
+      color: #2980b9;
+      font-size: 1.25rem;
+      overflow-wrap: break-word;
+    }
+    #sidebar .nav-link {
+      width: 100%;
+      color: #2c3e50;
+      font-weight: 600;
+      padding: 15px 30px;
+      border-left: 4px solid transparent;
+      transition: all .3s ease;
+      text-decoration: none;
+      display: block;
+    }
+    #sidebar .nav-link.active, #sidebar .nav-link:hover {
+      background-color: #f6fafe;
+      border-left-color: #2980b9;
+      color: #2980b9 !important;
+      text-decoration: none;
+    }
+    main.container-main {
+      margin-left: 260px;
+      padding: 2rem 3rem 3rem 3rem;
+      background: #f8fafc;
+      min-height: 100vh;
+      transition: margin-left .3s;
+    }
+    h1, h2 {
+      color: #2980b9;
+      font-weight: 700;
+      margin-top: 2rem;
+      margin-bottom: 20px;
+    }
+    table.table {
+      background: white;
+      border: 1px solid #ddd;
+    }
+    table.table th, table.table td {
+      vertical-align: middle;
+      padding: 0.8rem;
+      border: 1px solid #ddd;
+    }
+    table.table th {
+      background-color: #f1f5f9;
+      font-weight: 700;
+      color: #1e293b;
+    }
+    table.table-hover tbody tr:hover {
+      background-color: #e0ecff;
+    }
+    ul.list-group {
+      background: white;
+      border-radius: 6px;
+      padding: 0;
+      max-height: 400px;
+      overflow-y: auto;
+      width: 100%;
+    }
+    ul.list-group li {
+      padding: 12px 20px;
+      border-bottom: 1px solid #ededed;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1rem;
+    }
+    ul.list-group li:last-child {
+      border-bottom: none;
+    }
+    ul.list-group li .timestamp {
+      color: #777;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    a.btn, a.back-link {
+      font-weight: 600;
+      color: #2980b9;
+      cursor: pointer;
+      transition: color 0.3s ease;
+      text-decoration: none;
+    }
+    a.btn:hover, a.back-link:hover {
+      color: #1c5980;
+      text-decoration: underline;
+    }
+    .btn-section {
+      margin: 1rem 0 2rem 0;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand">CampusMeet</div>
+  <form method="post" action="{% url 'logout' %}">
+    {% csrf_token %}
+    <button type="submit" class="logout-btn" aria-label="Logout">Logout</button>
+  </form>
+</nav>
+
+<div id="sidebar">
+  <div class="sidebar-profile">
+    {% if request.user.userprofile.profile_image %}
+    <img src="{{ request.user.userprofile.profile_image.url }}" alt="Profile Image" />
+    {% else %}
+    <img src="{% static 'default_profile.png' %}" alt="Default Profile Image" />
+    {% endif %}
+    <div class="username">{{ request.user.username }}</div>
+  </div>
+  <a href="{% url 'student_dashboard' %}" class="nav-link active">Dashboard</a>
+  <a href="{% url 'student_notes' %}" class="nav-link">Notes</a>
+  <a href="{% url 'student_attendance' %}" class="nav-link">Attendance</a>
+  <a href="{% url 'student_notifications' %}" class="nav-link">Notifications</a>
+  <a href="{% url 'edit_profile' %}" class="nav-link">Edit Profile</a>
+</div>
+
+<main class="container-main">
+  <h1>Welcome, {{ request.user.username }}!</h1>
+
+  <h2>Upcoming Classes</h2>
+  <div class="table-responsive mb-4">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Subject</th>
+          <th>Scheduled Date & Time</th>
+          <th>Join</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for meeting in upcoming_meetings %}
+        <tr>
+          <td>{{ meeting.subject.name }}</td>
+          <td>{{ meeting.schedule_datetime|date:"Y-m-d H:i" }}</td>
+          <td>
+            {% if meeting.video_room_link %}
+            <a href="{{ meeting.video_room_link }}" target="_blank" class="btn btn-link">Join Meeting</a>
+            {% else %}
+            -
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="3" class="text-center text-muted py-4">No upcoming classes.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Attendance</h2>
+  <div class="table-responsive mb-4">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Subject</th>
+          <th>Scheduled</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for attendance in attendances %}
+        <tr>
+          <td>{{ attendance.meeting.subject.name }}</td>
+          <td>{{ attendance.meeting.schedule_datetime|date:"Y-m-d H:i" }}</td>
+          <td>{% if attendance.present %}Present{% else %}Absent{% endif %}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="3" class="text-center text-muted py-4">No attendance records.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Notes</h2>
+  <div class="btn-section">
+    <a href="{% url 'student_notes' %}" class="btn btn-outline-primary">View All Notes</a>
+  </div>
+  <ul class="list-group mb-4">
+    {% for note in notes %}
+    <li>
+      {{ note.title }} <small class="text-muted">({{ note.created_at|date:"Y-m-d H:i" }})</small>
+      {% if note.file %}| <a href="{{ note.file.url }}" download>Download</a>{% endif %}
+    </li>
+    {% empty %}
+    <li class="text-center text-muted">No notes available.</li>
+    {% endfor %}
+  </ul>
+
+  <h2>Notifications</h2>
+  <ul class="list-group">
+    {% for notification in notifications %}
+    <li class="d-flex justify-content-between align-items-center">
+      <span>{{ notification.message }}</span>
+      <small class="timestamp">{{ notification.created_at|timesince }} ago</small>
+    </li>
+    {% empty %}
+    <li class="text-center text-muted">No new notifications</li>
+    {% endfor %}
+  </ul>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

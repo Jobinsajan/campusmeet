@@ -1,0 +1,63 @@
+<html>
+<head>
+    <style>
+        #root {
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/@zegocloud/zego-uikit-prebuilt/zego-uikit-prebuilt.js"></script>
+<script>
+window.onload = function () {
+    function getUrlParams(url) {
+        let urlStr = url.split('?')[1];
+        const urlSearchParams = new URLSearchParams(urlStr);
+        const result = Object.fromEntries(urlSearchParams.entries());
+        return result;
+    }
+
+    // Use Django-provided user_id and user_name variables passed in context
+    const roomID = getUrlParams(window.location.href)['roomID'] || '{{ room_name }}';
+    const userID = "{{ user_id }}";
+    const userName = "{{ user_name }}";
+
+    const appID = 1912473266;
+    const serverSecret = "f188564a456fec9ff4ffaf5dcc439678";
+    const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, roomID, userID, userName);
+
+    const zp = ZegoUIKitPrebuilt.create(kitToken);
+    zp.joinRoom({
+        container: document.querySelector("#root"),
+        sharedLinks: [{
+            name: 'Personal link',
+            url: window.location.protocol + '//' + window.location.host + window.location.pathname + '?roomID=' + roomID,
+        }],
+        scenario: {
+            mode: ZegoUIKitPrebuilt.VideoConference,
+        },
+        turnOnMicrophoneWhenJoining: false,
+        turnOnCameraWhenJoining: false,
+        showMyCameraToggleButton: true,
+        showMyMicrophoneToggleButton: true,
+        showAudioVideoSettingsButton: true,
+        showScreenSharingButton: true,
+        showTextChat: true,
+        showUserList: true,
+        maxUsers: 50,
+        layout: "Grid",
+        showLayoutButton: true,
+    });
+
+    // Send leave event to server when user leaves/closes window
+    window.addEventListener('beforeunload', function () {
+        navigator.sendBeacon("{% url 'attendance_leave' %}", JSON.stringify({
+            meeting_id: roomID
+        }));
+    });
+}
+</script>
+</html>

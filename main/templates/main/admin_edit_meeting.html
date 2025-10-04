@@ -1,0 +1,64 @@
+{% extends 'main/base_admin.html' %}
+
+{% block title %}
+    {% if meeting %}Edit{% else %}Add{% endif %} Meeting
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-container {
+        max-width: 600px;
+        margin: 30px auto;
+        padding: 30px 40px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(149, 157, 165, 0.2);
+        transition: box-shadow 0.3s ease-in-out;
+    }
+    .form-container:hover {
+        box-shadow: 0 12px 40px rgba(149, 157, 165, 0.3);
+    }
+    .btn-primary {
+        font-weight: 600;
+        letter-spacing: 1px;
+        padding: 12px;
+    }
+    h1 {
+        font-weight: 700;
+        color: #343a40;
+        margin-bottom: 25px;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h1>{% if meeting %}Edit{% else %}Add{% endif %} Meeting</h1>
+    <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="mb-4">
+            <label for="id_subject" class="form-label fw-semibold">Subject</label>
+            <select id="id_subject" name="subject" class="form-select form-select-lg shadow-sm" required>
+                {% for subj in subjects %}
+                <option value="{{ subj.id }}" {% if meeting and meeting.subject.id == subj.id %}selected{% endif %}>{{ subj.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-4">
+            <label for="id_schedule_datetime" class="form-label fw-semibold">Schedule Date &amp; Time</label>
+            <input id="id_schedule_datetime" name="schedule_datetime" type="datetime-local" 
+                value="{{ meeting.schedule_datetime|default_if_none:''|date:'Y-m-d\\TH:i' }}" 
+                class="form-control form-control-lg shadow-sm" required>
+        </div>
+        <div class="mb-5">
+            <label for="id_meeting_link" class="form-label fw-semibold">Meeting Link (optional)</label>
+            <input id="id_meeting_link" name="meeting_link" type="url" class="form-control form-control-lg shadow-sm" 
+                value="{{ meeting.meeting_link|default_if_none:'' }}" placeholder="https://example.com/meeting-link">
+        </div>
+        <button type="submit" class="btn btn-primary w-100 shadow-lg">{% if meeting %}Update{% else %}Create{% endif %}</button>
+    </form>
+</div>
+{% endblock %}

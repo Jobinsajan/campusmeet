@@ -1,0 +1,72 @@
+{% extends 'main/base_admin.html' %}
+
+{% block title %}
+    {% if user %}Edit{% else %}Add{% endif %} User
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-container {
+        max-width: 600px;
+        margin: 30px auto;
+        padding: 30px 40px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgb(149 157 165 / 20%);
+        transition: box-shadow 0.3s ease-in-out;
+    }
+    .form-container:hover {
+        box-shadow: 0 12px 40px rgb(149 157 165 / 30%);
+    }
+    .btn-primary {
+        font-weight: 600;
+        letter-spacing: 1px;
+        padding: 12px;
+    }
+    h1 {
+        font-weight: 700;
+        color: #343a40;
+        margin-bottom: 25px;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h1>{% if user %}Edit{% else %}Add{% endif %} User</h1>
+    <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="mb-4">
+            <label for="username" class="form-label fw-semibold">Username</label>
+            <input id="username" name="username" type="text" class="form-control form-control-lg shadow-sm"
+                value="{{ user.username|default_if_none:'' }}" required placeholder="Enter username">
+        </div>
+        <div class="mb-4">
+            <label for="email" class="form-label fw-semibold">Email</label>
+            <input id="email" name="email" type="email" class="form-control form-control-lg shadow-sm"
+                value="{{ user.email|default_if_none:'' }}" required placeholder="Enter email">
+        </div>
+        <div class="mb-4">
+            <label for="role" class="form-label fw-semibold">Role</label>
+            <select id="role" name="role" class="form-select form-select-lg shadow-sm" required>
+                <option value="student" {% if profile and profile.role == "student" %}selected{% endif %}>Student</option>
+                <option value="faculty" {% if profile and profile.role == "faculty" %}selected{% endif %}>Faculty</option>
+                <option value="admin" {% if profile and profile.role == "admin" %}selected{% endif %}>Admin</option>
+            </select>
+        </div>
+        <div class="mb-5">
+            <label for="department" class="form-label fw-semibold">Department</label>
+            <select id="department" name="department" class="form-select form-select-lg shadow-sm">
+                <option value="" {% if not profile or not profile.department %}selected{% endif %}>(None)</option>
+                {% for dept in departments %}
+                <option value="{{ dept.id }}" {% if profile and profile.department and profile.department.id == dept.id %}selected{% endif %}>{{ dept.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary w-100 shadow-lg">Save</button>
+    </form>
+</div>
+{% endblock %}

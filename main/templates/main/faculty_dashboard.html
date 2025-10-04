@@ -1,0 +1,281 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Faculty Dashboard - CampusMeet</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body, html {
+      margin: 0; padding: 0; height: 100%;
+      font-family: 'Poppins', Arial, sans-serif;
+      background-color: #f8fafc;
+      min-height: 100vh;
+    }
+    nav.navbar {
+      background-color: #2980b9;
+      height: 56px;
+      padding: 0.5rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      user-select: none;
+    }
+    nav.navbar .navbar-brand {
+      font-weight: 900;
+      font-size: 1.5rem;
+      color: white;
+    }
+    nav.navbar .logout-btn {
+      background: transparent;
+      border: none;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: color 0.2s ease;
+    }
+    nav.navbar .logout-btn:hover {
+      color: #d4d4d4;
+      text-decoration: underline;
+    }
+    #sidebar {
+      position: fixed;
+      top: 56px;
+      left: 0;
+      width: 260px;
+      height: calc(100% - 56px);
+      background: #fff;
+      border-right: 1px solid #ededed;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+      padding-top: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-y: auto;
+      z-index: 1030;
+    }
+    .sidebar-profile {
+      text-align: center;
+      margin-bottom: 30px;
+      width: 200px;
+    }
+    .sidebar-profile img {
+      width: 110px;
+      height: 110px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid #2980b9;
+      margin-bottom: 12px;
+    }
+    .sidebar-profile .username {
+      font-weight: 700;
+      color: #2980b9;
+      font-size: 1.25rem;
+      word-break: break-word;
+    }
+    #sidebar .nav-link {
+      width: 100%;
+      color: #2c3e50;
+      font-weight: 600;
+      padding: 15px 30px;
+      border-left: 4px solid transparent;
+      transition: all .3s ease;
+      display: block;
+    }
+    #sidebar .nav-link.active, #sidebar .nav-link:hover {
+      background-color: #f6fafe;
+      border-left-color: #2980b9;
+      color: #2980b9 !important;
+      text-decoration: none;
+    }
+    #sidebar .nav-link i {
+      margin-right: 10px;
+    }
+    main.container-main {
+      margin-left: 260px;
+      padding: 2rem 3rem 3rem 3rem;
+      background: #f8fafc;
+      min-height: 100vh;
+      transition: margin-left .3s;
+    }
+    h2.section-title {
+      color: #2980b9;
+      font-weight: 700;
+      margin-top: 2rem;
+      margin-bottom: 20px;
+      border-bottom: 3px solid #e3e6f2;
+      padding-bottom: 8px;
+      font-size: 1.6rem;
+    }
+    .table-actions a {
+      margin-right: 8px;
+    }
+    @media (max-width: 991px) {
+      #sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        border-right: none;
+        box-shadow: none;
+        padding-top: 0;
+        justify-content: space-around;
+      }
+      #sidebar .nav-link {
+        order: 2;
+        padding: 1rem 1rem;
+        border-left: none;
+        border-bottom: 3px solid transparent;
+        flex-grow: 1;
+        text-align: center;
+        font-size: 1rem;
+      }
+      #sidebar .nav-link.active,
+      #sidebar .nav-link:hover {
+        border-bottom-color: #2980b9;
+        background: transparent;
+        color: #2980b9;
+      }
+      .sidebar-profile {
+        order: 1;
+        margin-bottom: 0;
+        width: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0.5rem 0;
+      }
+      .sidebar-profile img {
+        width: 60px;
+        height: 60px;
+        border-width: 2px;
+      }
+      .sidebar-profile .username {
+        font-size: 1rem;
+      }
+      main.container-main {
+        margin-left: 0;
+        padding: 1.5rem 1.5rem 3rem 1.5rem;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand">CampusMeet</div>
+  <form method="post" action="{% url 'logout' %}">
+    {% csrf_token %}
+    <button type="submit" class="logout-btn" aria-label="Logout">Logout</button>
+  </form>
+</nav>
+
+<div id="sidebar">
+  <div class="sidebar-profile">
+    {% if request.user.userprofile.profile_image %}
+      <img src="{{ request.user.userprofile.profile_image.url }}" alt="Profile Image" />
+    {% else %}
+      <img src="{% static 'default_profile.png' %}" alt="Default Profile Image" />
+    {% endif %}
+    <div class="username">{{ request.user.username }}</div>
+  </div>
+  <a href="{% url 'faculty_dashboard' %}" class="nav-link {% if section == 'dashboard' %}active{% endif %}"><i class="bi bi-speedometer2"></i> Dashboard</a>
+  <a href="{% url 'faculty_notes' %}" class="nav-link {% if section == 'notes' %}active{% endif %}"><i class="bi bi-file-earmark-text"></i> Notes</a>
+  <a href="{% url 'create_meeting' %}" class="nav-link {% if section == 'create_meeting' %}active{% endif %}"><i class="bi bi-calendar-plus"></i> Create Meeting</a>
+  <a href="{% url 'notifications' %}" class="nav-link {% if section == 'notifications' %}active{% endif %}"><i class="bi bi-bell"></i> Notifications</a>
+  <a href="{% url 'edit_profile' %}" class="nav-link {% if section == 'profile' %}active{% endif %}"><i class="bi bi-person"></i> Edit Profile</a>
+</div>
+
+<main class="container-main">
+  {% block content %}
+  <h1 class="mb-4" style="color: #2980b9; font-weight: 800;">Faculty Dashboard</h1>
+  <p>Welcome, <strong>{{ request.user.username }}</strong>!</p>
+
+  <h2 class="section-title">Your Subjects</h2>
+  <ul class="list-group mb-4">
+    {% for subject in subjects %}
+      <li class="list-group-item">{{ subject.name }}</li>
+    {% empty %}
+      <li class="list-group-item text-muted">No subjects assigned.</li>
+    {% endfor %}
+  </ul>
+
+  <h2 class="section-title">Your Meetings & Attendance</h2>
+  <div class="table-responsive mb-5">
+    <table class="table table-hover table-bordered align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Subject</th>
+          <th>Scheduled Date & Time</th>
+          <th>Attendance</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for meeting in meetings %}
+        <tr>
+          <td>{{ meeting.subject.name }}</td>
+          <td>{{ meeting.schedule_datetime }}</td>
+          <td>{{ meeting.attendance_count }} / {{ meeting.total_students }}</td>
+          <td class="table-actions">
+            <a href="{% url 'edit_meeting' meeting.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+            <a href="{% url 'delete_meeting' meeting.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+            <a href="{% url 'meeting_attendance' meeting.id %}" class="btn btn-sm btn-outline-info">View Attendance</a>
+            {% if meeting.video_room_link %}
+            <a href="{{ meeting.video_room_link }}" target="_blank" class="btn btn-sm btn-outline-success">Start Meeting</a>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="4" class="text-center text-muted py-4">No meetings yet.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <h2 class="section-title">Your Notes</h2>
+  <div class="mb-3">
+    <a href="{% url 'create_note' %}" class="btn btn-primary">Upload New Note</a>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover table-bordered align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Title</th>
+          <th>Subject</th>
+          <th>Created At</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for note in notes %}
+        <tr>
+          <td>{{ note.title }}</td>
+          <td>{{ note.subject.name }}</td>
+          <td>{{ note.created_at|date:"Y-m-d H:i" }}</td>
+          <td class="table-actions">
+            <a href="{% url 'edit_note' note.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+            <a href="{% url 'delete_note' note.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="4" class="text-center text-muted py-4">No notes available.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endblock %}
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
