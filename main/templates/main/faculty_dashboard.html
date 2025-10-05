@@ -300,11 +300,11 @@
           <td>{{ meeting.schedule_datetime }}</td>
           <td>{{ meeting.attendance_count }} / {{ meeting.total_students }}</td>
           <td class="table-actions">
-            <a href="{% url 'edit_meeting' meeting.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
-            <a href="{% url 'delete_meeting' meeting.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
-            <a href="{% url 'meeting_attendance' meeting.id %}" class="btn btn-sm btn-outline-info">View Attendance</a>
+            <a href="{% url 'edit_meeting' meeting.id %}" class="btn btn-outline-primary btn-sm">Edit</a>
+            <a href="{% url 'delete_meeting' meeting.id %}" class="btn btn-outline-danger btn-sm">Delete</a>
+            <a href="{% url 'meeting_attendance' meeting.id %}" class="btn btn-outline-info btn-sm">View Attendance</a>
             {% if meeting.video_room_link %}
-            <a href="{{ meeting.video_room_link }}" target="_blank" class="btn btn-sm btn-outline-success">Start Meeting</a>
+            <a href="{{ meeting.video_room_link }}" target="_blank" class="btn btn-outline-success btn-sm">Start Meeting</a>
             {% endif %}
           </td>
         </tr>
@@ -338,8 +338,8 @@
           <td>{{ note.subject.name }}</td>
           <td>{{ note.created_at|date:"Y-m-d H:i" }}</td>
           <td class="table-actions">
-            <a href="{% url 'edit_note' note.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
-            <a href="{% url 'delete_note' note.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+            <a href="{% url 'edit_note' note.id %}" class="btn btn-outline-primary btn-sm">Edit</a>
+            <a href="{% url 'delete_note' note.id %}" class="btn btn-outline-danger btn-sm">Delete</a>
           </td>
         </tr>
         {% empty %}

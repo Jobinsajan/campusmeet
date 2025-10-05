@@ -33,7 +33,7 @@ class ProfileForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['username']  # username field only
+        fields = ['username']
         widgets = {
             'username': forms.TextInput(attrs={
                 'class': 'form-control form-control-sm',
@@ -56,5 +56,6 @@ class ProfileForm(forms.ModelForm):
             if commit:
                 profile.save()
         return user
+
 
 

@@ -24,7 +24,7 @@
       border-radius: 12px;
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
       width: 100%;
-      max-width: 360px;
+      max-width: 400px;
       text-align: center;
     }
     h2 {
@@ -115,7 +115,7 @@
         {% else %}
           <img src="{% static 'default_profile.png' %}" alt="Default Profile Image" />
         {% endif %}
-        <label for="id_profile_image" class="btn-file-label">Change Profile Image</label>
+        <label for="{{ form.profile_image.id_for_label }}" class="btn-file-label">Change Profile Image</label>
         {{ form.profile_image }}
       </div>
       <label for="{{ form.username.id_for_label }}">Username</label>

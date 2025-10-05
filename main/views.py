@@ -275,11 +275,24 @@ def faculty_notes(request):
     return render(request, 'main/faculty_notes.html', {'notes': notes, 'query': query})
 
 
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, render, redirect
+from django.http import HttpResponse
+from django.contrib import messages
+from .models import Meeting, Attendance
+import csv
+
 @login_required
 def meeting_attendance(request, meeting_id):
     meeting = get_object_or_404(Meeting, id=meeting_id, subject__faculty=request.user)
     attendance_records = Attendance.objects.filter(meeting=meeting).select_related('student')
 
+    # Calculate duration dynamically for display
+    for record in attendance_records:
+        if record.join_time and record.leave_time:
+            record.duration = record.leave_time - record.join_time
+        else:
+            record.duration = None
 
     if request.method == 'POST':
         for record in attendance_records:
@@ -287,25 +300,30 @@ def meeting_attendance(request, meeting_id):
             record.present = present == 'on'
             record.save()
         messages.success(request, "Attendance updated successfully.")
-
+        return redirect('meeting_attendance', meeting_id=meeting_id)
 
     return render(request, 'main/meeting_attendance.html', {
         'meeting': meeting,
         'attendance_records': attendance_records,
     })
 
-
 @login_required
 def attendance_report(request, meeting_id):
     meeting = get_object_or_404(Meeting, id=meeting_id, subject__faculty=request.user)
     attendance_records = Attendance.objects.filter(meeting=meeting).select_related('student')
+
+    # Calculate duration dynamically for display
+    for record in attendance_records:
+        if record.join_time and record.leave_time:
+            record.duration = record.leave_time - record.join_time
+        else:
+            record.duration = None
 
     context = {
         'meeting': meeting,
         'attendance_records': attendance_records,
     }
     return render(request, 'main/attendance_report.html', context)
-
 
 @login_required
 def export_attendance_csv(request, meeting_id):
@@ -316,16 +334,22 @@ def export_attendance_csv(request, meeting_id):
     response['Content-Disposition'] = f'attachment; filename="attendance_{meeting.subject.name}_{meeting_id}.csv"'
 
     writer = csv.writer(response)
-    writer.writerow(['Student', 'Present', 'Join Time'])
+    writer.writerow(['Student', 'Present', 'Join Time', 'Leave Time', 'Duration'])
 
     for record in attendance_records:
+        duration = ''
+        if record.join_time and record.leave_time:
+            duration = str(record.leave_time - record.join_time)
         writer.writerow([
-            record.student.get_full_name,
+            record.student.get_full_name() or record.student.username,
             'Yes' if record.present else 'No',
             record.join_time.strftime('%Y-%m-%d %H:%M:%S') if record.join_time else '',
+            record.leave_time.strftime('%Y-%m-%d %H:%M:%S') if record.leave_time else '',
+            duration
         ])
 
     return response
+
 
 
 from .forms import ProfileForm
@@ -334,21 +358,27 @@ from django.shortcuts import render, redirect
 
 @login_required
 def edit_profile(request):
+    user = request.user
+
     if request.method == "POST":
-        form = ProfileForm(request.POST, request.FILES, instance=request.user)
+        form = ProfileForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
             form.save()
-            if request.user.userprofile.role == "student":
+            role = getattr(user.userprofile, 'role', None)
+            if role == "student":
                 return redirect("student_dashboard")
-            elif request.user.userprofile.role == "faculty":
+            elif role == "faculty":
                 return redirect("faculty_dashboard")
             else:
                 return redirect("index")
         else:
-            return render(request, "main/edit_profile.html", {"form": form})
+            return render(request, "main/edit_profile.html", {"form": form, "profile": user.userprofile})
     else:
-        form = ProfileForm(instance=request.user)
-        return render(request, "main/edit_profile.html", {"form": form})
+        form = ProfileForm(instance=user)
+        return render(request, "main/edit_profile.html", {"form": form, "profile": user.userprofile})
+
+
+
 
 
 from django.shortcuts import render

@@ -66,6 +66,14 @@ class Attendance(models.Model):
 
     def __str__(self):
         return f"{self.student.username} - {self.meeting.subject.name} - {'Present' if self.present else 'Absent'}"
+
+    def save(self, *args, **kwargs):
+        if self.join_time and self.leave_time:
+            self.duration = self.leave_time - self.join_time
+        else:
+            self.duration = None
+        super().save(*args, **kwargs)
+
     
 
 
