@@ -6,4 +6,8 @@ admin.site.register(Department)
 admin.site.register(Subject)
 admin.site.register(Meeting)
 admin.site.register(Note)
-admin.site.register(Attendance)
+
+@admin.register(Attendance)
+class AttendanceAdmin(admin.ModelAdmin):
+    list_display = ('student', 'meeting', 'join_time', 'leave_time', 'duration', 'present')
+    readonly_fields = ('duration', )
