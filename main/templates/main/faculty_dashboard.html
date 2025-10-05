@@ -6,164 +6,234 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Faculty Dashboard - CampusMeet</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
   <style>
+    :root {
+      --primary-color: #2980b9;
+      --background-glass: rgba(255 255 255 / 0.55);
+      --shadow-glass: rgba(41, 128, 185, 0.25);
+    }
     body, html {
       margin: 0; padding: 0; height: 100%;
       font-family: 'Poppins', Arial, sans-serif;
-      background-color: #f8fafc;
+      background: linear-gradient(135deg, #f0f4ff 0%, #ffffff 100%);
       min-height: 100vh;
+      overflow-x: hidden;
+      color: #3a3f58;
     }
     nav.navbar {
-      background-color: #2980b9;
-      height: 56px;
-      padding: 0.5rem 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: rgba(41, 128, 185, 0.85);
+      backdrop-filter: saturate(180%) blur(8px);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
       color: white;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      padding: 0.5rem 1.5rem;
+      z-index: 1100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       user-select: none;
     }
     nav.navbar .navbar-brand {
-      font-weight: 900;
       font-size: 1.5rem;
+      font-weight: 700;
       color: white;
+      letter-spacing: 1.3px;
+      user-select: text;
+    }
+    nav.navbar .menu-toggle-btn {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.8rem;
+      cursor: pointer;
+      display: none;
     }
     nav.navbar .logout-btn {
       background: transparent;
       border: none;
-      color: white;
       font-weight: 600;
+      color: white;
       cursor: pointer;
       font-size: 1rem;
-      transition: color 0.2s ease;
+      padding: 0.3rem 0.7rem;
+      border-radius: 6px;
+      transition: background-color 0.25s ease, color 0.25s ease;
     }
     nav.navbar .logout-btn:hover {
+      background-color: rgba(255,255,255,0.2);
       color: #d4d4d4;
-      text-decoration: underline;
+      outline: none;
     }
     #sidebar {
       position: fixed;
       top: 56px;
       left: 0;
-      width: 260px;
+      width: 280px;
       height: calc(100% - 56px);
-      background: #fff;
-      border-right: 1px solid #ededed;
-      box-shadow: 2px 0 10px rgba(0,0,0,0.05);
-      padding-top: 30px;
+      background: var(--background-glass);
+      backdrop-filter: saturate(180%) blur(15px);
+      border-right: 1px solid #cfd9e8;
+      box-shadow: 5px 0 30px var(--shadow-glass);
       display: flex;
       flex-direction: column;
       align-items: center;
       overflow-y: auto;
-      z-index: 1030;
+      transition: transform 0.3s ease;
+      z-index: 1099;
+    }
+    #sidebar.collapsed {
+      transform: translateX(-100%);
     }
     .sidebar-profile {
       text-align: center;
-      margin-bottom: 30px;
       width: 200px;
+      margin: 1.5rem 0;
+      user-select: none;
     }
     .sidebar-profile img {
       width: 110px;
       height: 110px;
-      object-fit: cover;
       border-radius: 50%;
-      border: 3px solid #2980b9;
-      margin-bottom: 12px;
+      border: 3px solid var(--primary-color);
+      object-fit: cover;
+      margin-bottom: 1rem;
+      transition: box-shadow 0.3s ease;
+      cursor: default;
+    }
+    .sidebar-profile img:hover {
+      box-shadow: 0 0 20px 4px var(--primary-color);
     }
     .sidebar-profile .username {
       font-weight: 700;
-      color: #2980b9;
       font-size: 1.25rem;
+      color: var(--primary-color);
       word-break: break-word;
+      user-select: text;
+      cursor: default;
     }
     #sidebar .nav-link {
       width: 100%;
-      color: #2c3e50;
+      padding: 15px 28px;
+      border-left: 6px solid transparent;
+      font-size: 1.05rem;
       font-weight: 600;
-      padding: 15px 30px;
-      border-left: 4px solid transparent;
-      transition: all .3s ease;
-      display: block;
-    }
-    #sidebar .nav-link.active, #sidebar .nav-link:hover {
-      background-color: #f6fafe;
-      border-left-color: #2980b9;
-      color: #2980b9 !important;
+      color: #4d5a80;
       text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: color 0.3s, background-color 0.3s, border-left-color 0.3s;
+      cursor: pointer;
+      user-select: none;
     }
     #sidebar .nav-link i {
-      margin-right: 10px;
+      font-size: 1.3rem;
+      color: var(--primary-color);
+      user-select: none;
+    }
+    #sidebar .nav-link:hover,
+    #sidebar .nav-link.active {
+      color: var(--primary-color);
+      background-color: #e6f0ff;
+      border-left-color: var(--primary-color);
+      text-decoration: none;
     }
     main.container-main {
-      margin-left: 260px;
-      padding: 2rem 3rem 3rem 3rem;
-      background: #f8fafc;
+      margin-left: 280px;
+      padding: 2rem 3rem 3rem;
       min-height: 100vh;
-      transition: margin-left .3s;
+      background: linear-gradient(180deg, #f9fbff 0%, #e6f0ff 100%);
+      transition: margin-left 0.3s ease;
+      user-select: none;
     }
     h2.section-title {
-      color: #2980b9;
-      font-weight: 700;
+      color: var(--primary-color);
+      font-weight: 800;
       margin-top: 2rem;
-      margin-bottom: 20px;
-      border-bottom: 3px solid #e3e6f2;
-      padding-bottom: 8px;
-      font-size: 1.6rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 3px solid #d6e4ff;
+      padding-bottom: 10px;
+      font-size: 1.75rem;
+      user-select: none;
     }
     .table-actions a {
-      margin-right: 8px;
+      margin-right: 10px;
+      font-size: 0.9rem;
+      border-radius: 6px;
+      padding: 6px 12px;
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+    .table-actions a:hover {
+      text-decoration: none;
+      background-color: #c5dcff;
+    }
+    .btn-primary, .btn-outline-primary {
+      border-radius: 22px;
+      font-weight: 700;
+      padding: 0.4rem 1rem;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      user-select: none;
+    }
+    .btn-primary {
+      background: linear-gradient(90deg, var(--primary-color) 40%, #4fc3f7 100%);
+      border: none;
+      color: white;
+    }
+    .btn-primary:hover, .btn-primary:focus {
+      background: #1c5980;
+      box-shadow: 0 0 14px #1c5980;
+    }
+    .btn-outline-primary {
+      border: 2px solid var(--primary-color);
+      color: var(--primary-color);
+      background: white;
+    }
+    .btn-outline-primary:hover, .btn-outline-primary:focus {
+      background: #d7ebff;
+      color: #1c5980;
+      border-color: #1c5980;
     }
     @media (max-width: 991px) {
       #sidebar {
-        position: static;
-        width: 100%;
-        height: auto;
-        flex-direction: row;
-        border-right: none;
-        box-shadow: none;
-        padding-top: 0;
-        justify-content: space-around;
+        position: fixed;
+        top: 56px;
+        left: 0;
+        width: 260px;
+        height: calc(100% - 56px);
+        background: var(--background-glass);
+        box-shadow: 3px 0 24px rgba(41, 128, 185, 0.22);
+        z-index: 1050;
+        transform: translateX(-100%);
       }
-      #sidebar .nav-link {
-        order: 2;
-        padding: 1rem 1rem;
-        border-left: none;
-        border-bottom: 3px solid transparent;
-        flex-grow: 1;
-        text-align: center;
-        font-size: 1rem;
+      #sidebar.show {
+        transform: translateX(0);
       }
-      #sidebar .nav-link.active,
-      #sidebar .nav-link:hover {
-        border-bottom-color: #2980b9;
-        background: transparent;
-        color: #2980b9;
+      #sidebar::-webkit-scrollbar {
+        width: 4px;
       }
-      .sidebar-profile {
-        order: 1;
-        margin-bottom: 0;
-        width: auto;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 0.5rem 0;
-      }
-      .sidebar-profile img {
-        width: 60px;
-        height: 60px;
-        border-width: 2px;
-      }
-      .sidebar-profile .username {
-        font-size: 1rem;
+      #sidebar::-webkit-scrollbar-thumb {
+        background-color: var(--primary-color);
+        border-radius: 2px;
       }
       main.container-main {
         margin-left: 0;
-        padding: 1.5rem 1.5rem 3rem 1.5rem;
+        padding: 1rem 1rem 3rem 1rem;
+      }
+      nav.navbar .menu-toggle-btn {
+        display: block;
+        border: none;
+        background: transparent;
+        color: white;
+        font-size: 1.6rem;
+        cursor: pointer;
+        user-select: none;
       }
     }
   </style>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
 </head>
 <body>
 
@@ -184,16 +254,23 @@
     {% endif %}
     <div class="username">{{ request.user.username }}</div>
   </div>
-  <a href="{% url 'faculty_dashboard' %}" class="nav-link {% if section == 'dashboard' %}active{% endif %}"><i class="bi bi-speedometer2"></i> Dashboard</a>
-  <a href="{% url 'faculty_notes' %}" class="nav-link {% if section == 'notes' %}active{% endif %}"><i class="bi bi-file-earmark-text"></i> Notes</a>
-  <a href="{% url 'create_meeting' %}" class="nav-link {% if section == 'create_meeting' %}active{% endif %}"><i class="bi bi-calendar-plus"></i> Create Meeting</a>
-  <a href="{% url 'notifications' %}" class="nav-link {% if section == 'notifications' %}active{% endif %}"><i class="bi bi-bell"></i> Notifications</a>
-  <a href="{% url 'edit_profile' %}" class="nav-link {% if section == 'profile' %}active{% endif %}"><i class="bi bi-person"></i> Edit Profile</a>
+  <a href="{% url 'faculty_dashboard' %}" class="nav-link {% if section == 'dashboard' %}active{% endif %}">
+    <i class="bi bi-speedometer2"></i> Dashboard
+  </a>
+  <a href="{% url 'faculty_notes' %}" class="nav-link {% if section == 'notes' %}active{% endif %}">
+    <i class="bi bi-file-earmark-text"></i> Notes
+  </a>
+  <a href="{% url 'create_meeting' %}" class="nav-link {% if section == 'create_meeting' %}active{% endif %}">
+    <i class="bi bi-calendar-plus"></i> Create Meeting
+  </a>
+  <a href="{% url 'edit_profile' %}" class="nav-link {% if section == 'profile' %}active{% endif %}">
+    <i class="bi bi-person"></i> Edit Profile
+  </a>
 </div>
 
-<main class="container-main">
+<main class="container-main" tabindex="-1">
   {% block content %}
-  <h1 class="mb-4" style="color: #2980b9; font-weight: 800;">Faculty Dashboard</h1>
+  <h1 class="mb-4" style="color: var(--primary-color); font-weight: 900; user-select: none;">Faculty Dashboard</h1>
   <p>Welcome, <strong>{{ request.user.username }}</strong>!</p>
 
   <h2 class="section-title">Your Subjects</h2>
@@ -206,12 +283,12 @@
   </ul>
 
   <h2 class="section-title">Your Meetings & Attendance</h2>
-  <div class="table-responsive mb-5">
+  <div class="table-responsive mb-5" role="table" aria-label="Meetings and attendance">
     <table class="table table-hover table-bordered align-middle">
       <thead class="table-light">
         <tr>
           <th>Subject</th>
-          <th>Scheduled Date & Time</th>
+          <th>Scheduled Date &amp; Time</th>
           <th>Attendance</th>
           <th>Actions</th>
         </tr>
@@ -242,9 +319,9 @@
 
   <h2 class="section-title">Your Notes</h2>
   <div class="mb-3">
-    <a href="{% url 'create_note' %}" class="btn btn-primary">Upload New Note</a>
+    <a href="{% url 'create_note' %}" class="btn btn-lg btn-primary">Upload New Note</a>
   </div>
-  <div class="table-responsive">
+  <div class="table-responsive" role="table" aria-label="Notes list">
     <table class="table table-hover table-bordered align-middle">
       <thead class="table-light">
         <tr>
