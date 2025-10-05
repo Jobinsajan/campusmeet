@@ -4,259 +4,292 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>CampusMeet - Welcome</title>
+  <!-- Bootstrap + Icons + Google Fonts -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <style>
-    /* Base styles */
-    body, html {
-      margin: 0; padding: 0; height: 100%;
-      font-family: 'Poppins', Arial, sans-serif;
-      background-color: #f9fafc;
-      color: #2c3e50;
-      overflow-x: hidden;
-    }
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet" />
 
-    /* Navbar styling */
+  <style>
+    :root {
+      --primary: #2980b9;
+      --accent: #4fc3f7;
+      --deep: #162636;
+      --light: #f9fafc;
+      --hero-overlay: rgba(22,38,54,0.68);
+    }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      background: var(--light);
+      color: var(--deep);
+      min-height: 100vh;
+    }
+    /* Navbar */
     nav.navbar {
-      background: rgba(255 255 255 / 0.95);
-      box-shadow: 0 4px 14px rgba(0,0,0,0.1);
-      padding: 15px 2rem;
-      position: fixed;
-      top: 0;
-      width: 100%;
-      z-index: 1030;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 24px var(--primary)11;
+      border-radius: 0 0 18px 18px;
       font-weight: 600;
+      padding: 16px 2rem;
+      position: fixed;
+      top: 0; left: 0; width: 100%; z-index: 1040;
     }
     nav .navbar-brand {
-      font-weight: 800;
-      font-size: 1.9rem;
-      color: #34495e;
-      letter-spacing: 1.2px;
+      font-weight: 900;
+      font-size: 2rem;
+      color: var(--primary);
+      letter-spacing:1.5px;
+      display: flex; align-items: center;
+      gap:8px;
+    }
+    nav .btn-outline-primary, nav .btn-primary {
+      border-radius: 40px;
+      font-weight:700;
+      font-size: 1rem;
+      padding: 0.6em 1.9em;
     }
     nav .btn-outline-primary {
-      border-radius: 50px;
-      border: 2px solid #34495e;
-      color: #34495e;
-      font-weight: 600;
-      transition: all 0.3s ease;
+      border: 2px solid var(--primary); color: var(--primary);
+      background: #fff; transition: all 0.3s;
     }
     nav .btn-outline-primary:hover {
-      background: #34495e;
-      color: #fff;
+      background: var(--primary); color: #fff;
     }
     nav .btn-primary {
-      background: #2980b9;
-      color: #fff;
-      border-radius: 50px;
-      font-weight: 600;
-      transition: all 0.3s ease;
+      background: linear-gradient(90deg, var(--primary) 45%, var(--accent) 100%);
+      border: none; color: #fff; transition: background 0.35s;
     }
     nav .btn-primary:hover {
-      background: #1c5980;
-      color: #fff;
+      background: var(--deep);
+      color:#fff;
     }
+    .navbar-toggler { border:none; }
 
-    /* Hero styling */
-    header.hero {
+    /* Hero Section */
+    .hero {
       background: 
-        linear-gradient(rgba(249, 250, 252, 0.85), rgba(249, 250, 252, 0.85)),
-        url('https://images.unsplash.com/photo-1596495578050-5a4f23c8e992?auto=format&fit=crop&w=1600&q=80')
-        no-repeat center center/cover;
-      height: 75vh;
+        linear-gradient(var(--hero-overlay), var(--hero-overlay)),
+        url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80') center center/cover no-repeat;
+      height: 87vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
       text-align: center;
-      padding: 0 1rem;
-      margin-top: 65px;
-      border-radius: 0 0 40px 40px;
-      box-shadow: 0 6px 12px rgb(0 0 0 / 0.08);
-    }
-    header.hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: rgba(255 255 255 / 0.45);
-      z-index: 1;
-      border-radius: 0 0 40px 40px;
-    }
-    header.hero .content {
       position: relative;
-      max-width: 720px;
-      z-index: 10;
-      color: #2980b9;
-      animation: fadeInUp 1.1s ease forwards;
+      margin-top: 80px;
+      border-radius: 0 0 36px 36px;
+      overflow: hidden;
+      animation: fadeHeroIn 1.1s cubic-bezier(0.4,0,0.2,1);
+      box-shadow: 0 16px 38px #2980b92a;
     }
-    header.hero h1 {
-      font-size: 3.8rem;
+    @keyframes fadeHeroIn {
+      from { opacity:0; transform: scale(1.08);}
+      to { opacity:1; transform: scale(1);}
+    }
+    .hero-content {
+      position: relative;
+      z-index:2;
+      color:#fff;
+      max-width: 1100px;
+      margin: 0 auto;
+      animation: slideUp 0.9s cubic-bezier(0.25,1,0.5,1);
+    }
+    @keyframes slideUp {
+      from { opacity:0; transform: translateY(36px);}
+      to { opacity:1; transform: translateY(0);}
+    }
+    .hero-content h1 {
+      font-size: 2.4rem;
       font-weight: 900;
-      line-height: 1.1;
-      margin-bottom: 1rem;
-      letter-spacing: 1.5px;
-      text-shadow: 0 2px 6px rgba(255, 255, 255, 0.7);
+      line-height: 1.12;
+      margin-bottom: 0.8rem;
+      letter-spacing: 2px;
+      text-shadow: 0 4px 26px #151e2535;
+      display: flex; align-items: center; gap: 18px;
     }
-    header.hero p {
-      font-size: 1.3rem;
-      font-weight: 600;
-      margin-bottom: 3rem;
-      color: #34495e;
-      text-shadow: 0 1px 3px rgba(255, 255, 255, 0.6);
+    .hero-content p {
+      font-size: 1.08rem;
+      line-height:1.7;
+      color: #ecf0f1;
+      font-weight: 500;
+      margin-bottom: 2.4rem;
+      text-shadow: 0 2px 18px #0e1721d1;
+      letter-spacing:.2px;
     }
-    header.hero a.btn {
-      padding: 1rem 3rem;
-      font-weight: 700;
-      font-size: 1.15rem;
-      border-radius: 50px;
-      box-shadow: 0 10px 30px rgba(41, 128, 185, 0.5);
-      transition: box-shadow 0.3s ease;
-      margin: 0 0.5rem;
+    .hero-content .btn {
+      box-shadow: 0 5px 24px var(--accent)52;
+      border-radius:44px;
+      margin: 0 0.5rem 0.8rem;
+      font-size: 1.06rem;
+      font-weight:700;
+      letter-spacing: 0.9px;
+      transition: all 0.3s;
+      padding: 0.85em 2.6em;
     }
-    header.hero a.btn-light {
-      color: #2980b9;
-      background-color: #ecf0f1;
+    .hero-content .btn-light {
+      background: #fff;
+      color: var(--primary);
       border: none;
     }
-    header.hero a.btn-light:hover {
-      box-shadow: 0 15px 40px rgba(41, 128, 185, 0.8);
-      color: #145a86;
-      text-decoration: none;
+    .hero-content .btn-light:hover {
+      color: var(--deep);
+      background:#ebf0ff;
+      box-shadow: 0 16px 38px var(--primary)27;
+      transform: translateY(-2px) scale(1.04);
     }
-    header.hero a.btn-outline-primary {
-      color: #2980b9;
-      border: 2px solid #2980b9;
+    .hero-content .btn-outline-primary {
+      color: #fff;
+      border: 2px solid #fff;
       background: transparent;
     }
-    header.hero a.btn-outline-primary:hover {
-      background: #2980b9;
-      color: #fff;
-      text-decoration: none;
+    .hero-content .btn-outline-primary:hover {
+      background: #fff;
+      color: var(--primary);
+      border: 2px solid #fff;
+      box-shadow: 0 14px 23px var(--primary)26;
+      transform:translateY(-2px) scale(1.03);
+    }
+    .hero-images {
+      margin-top: 2.6rem;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: fadeInImgs 1s cubic-bezier(0.44,0,0.12,1) 0.9s both;
+      opacity: 0;
+    }
+    @keyframes fadeInImgs {
+      to { opacity:1;}
+    }
+    .hero-images img {
+      border-radius: 18px;
+      width: 112px; height: 88px;
+      object-fit: cover; box-shadow: 0 5px 25px #151e251f;
+      margin: 0 6px;
+      transition: transform 0.35s, box-shadow 0.35s;
+    }
+    .hero-images img:hover {
+      transform: scale(1.07) rotate(-2deg);
+      box-shadow: 0 13px 40px #2980b945;
     }
 
     /* Features Section */
     section.features {
-      background: #fff;
-      color: #2c3e50;
-      padding: 5rem 1rem 7rem;
+      background: linear-gradient(120deg,var(--light) 73%,#e3ecf7 94%);
+      color: var(--deep);
+      padding: 4.8rem 0 6.5rem;
       text-align: center;
+      overflow: hidden;
+      position:relative;
     }
-    section.features h2 {
-      font-weight: 900;
-      font-size: 2.9rem;
-      margin-bottom: 1.2rem;
-      color: #2980b9;
-      letter-spacing: 1.5px;
+    .features h2 {
+      font-weight: 900; font-size: 2rem;
+      margin-bottom: 1rem; color: var(--primary);
+      letter-spacing: 1.6px;
+      animation: fadeInUp 1.0s .2s both;
     }
-    section.features p.lead {
-      font-size: 1.2rem;
-      max-width: 700px;
-      margin: 0 auto 4rem;
-      color: #7f8c8d;
-      font-weight: 500;
+    .features p.lead {
+      font-size: 1.13rem; max-width: 700px; margin: 0 auto 2.9rem;
+      color: #5d6d7e; font-weight: 500;
+      animation: fadeInUp 1s .4s both;
     }
-    section.features .container {
-      max-width: 1100px;
-      margin: 0 auto;
+    .features .container { max-width:1100px; }
+    .features .card {
+      border: none; border-radius: 22px;
+      background: #fff;
+      box-shadow: 0 12px 28px #2980b90f;
+      transition: transform 0.48s, box-shadow 0.48s;
+      cursor: pointer;
+      min-height: 340px;
+      display: flex; flex-direction: column; align-items: center;
+      overflow: hidden;
+      animation: fadeInRight 1s ease;
     }
-    section.features .card {
-      border: none;
-      border-radius: 22px;
-      box-shadow: 0 12px 30px rgb(41 128 185 / 0.18);
-      transition: transform 0.5s ease, box-shadow 0.5s ease;
-      cursor: default;
-      padding: 22px;
-      min-height: 430px;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
+    @keyframes fadeInRight {
+      from{opacity:0; transform: translateX(50px);}
+      to{opacity:1; transform: translateX(0);}
     }
-    section.features .card:hover {
-      box-shadow: 0 16px 40px rgb(41 128 185 / 0.36);
-      transform: translateY(-16px);
+    .features .card:hover {
+      box-shadow: 0 16px 40px #93d2f6bb;
+      transform: translateY(-10px) scale(1.028);
     }
-    section.features .card img {
-      border-radius: 17px;
-      max-width: 100%;
-      aspect-ratio: 4 / 3;
-      object-fit: cover;
-      margin-bottom: 22px;
-      box-shadow: 0 5px 20px rgb(0 0 0 / 0.15);
-      transition: transform 0.4s ease;
+    .features .card img {
+      border-radius: 15px; width: 100%; aspect-ratio: 4/2.6;
+      max-height:122px;
+      object-fit: cover; margin-bottom: 22px;
+      box-shadow: 0 3px 16px #93d2f638;
+      transition: transform 0.35s;
+      background: #f5faff;
+      display: block;
     }
-    section.features .card:hover img {
-      transform: scale(1.12);
+    .features .card:hover img { transform: scale(1.13); }
+    .features .card h4 {
+      font-weight: 700; color: var(--primary); margin-bottom: 13px;
+      letter-spacing: 1.1px; font-size: 1.22rem;
+      display: flex; align-items: center; gap: 10px;
     }
-    section.features .card h4 {
-      font-weight: 700;
-      color: #2980b9;
-      margin-bottom: 15px;
-      letter-spacing: 1.2px;
-      font-size: 1.6rem;
-    }
-    section.features .card p {
-      font-size: 1.07rem;
-      color: #5d6d7e;
-      flex-grow: 1;
+    .features .card p {
+      font-size: 1.09rem; color: #5d6d7e;
+      flex-grow: 1; margin-bottom: 8px;
     }
 
     /* Footer */
     footer {
-      background-color: #ecf0f1;
-      color: #7f8c8d;
-      padding: 2rem 0;
-      text-align: center;
-      font-weight: 400;
-      letter-spacing: 0.7px;
-      border-top: 2px solid #d6dbdf;
-      margin-top: 20px;
+      background: linear-gradient(98deg, #e3ecf7 7%, #ecf0f1 98%);
+      color: #495057;
+      border-top: 2px solid #dde6f1;
+      margin-top: 32px;
+      font-size: 1rem;
+      letter-spacing: .6px;
+      box-shadow: 0 -6px 32px #297ab922;
+      position: relative;
+    }
+    footer a.text-primary:hover {
+      color: #174a7a !important;
+      text-decoration: none;
+    }
+    footer .bi {
+      vertical-align: -.15em;
+      transition: color 0.15s;
+    }
+    footer .text-center.small {
+      color:#adb5bd;
     }
 
     /* Animations */
     @keyframes fadeInUp {
-      0% {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from{opacity:0; transform: translateY(42px);}
+      to{opacity:1; transform: translateY(0);}
     }
 
-    /* Responsive */
-    @media (max-width: 992px) {
-      header.hero h1 {
-        font-size: 2.8rem;
-      }
-      header.hero p {
-        font-size: 1.1rem;
-      }
-      section.features .card {
-        min-height: 380px;
-      }
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+      .hero { height: 57vh; min-height:440px;padding-bottom:25px;}
+      .hero-content h1 { font-size: 1.4rem; }
+      .navbar-brand{font-size:1.1rem;}
+      nav.navbar{padding: 8px 0.4rem;}
+      footer .container{flex-direction:column !important;}
     }
-    @media (max-width: 576px) {
-      header.hero h1 {
-        font-size: 2.1rem;
-      }
-      section.features .card {
-        min-height: 330px;
-      }
+    @media (max-width: 480px) {
+      .navbar-brand { font-size: 1.03rem;}
+      .hero-content h1{font-size: 1.1rem;}
+      .hero-content p{font-size: .91rem;}
+      .features h2{font-size: 1.1rem;}
+      .features .card{min-height:180px;padding:12px;}
+      .hero-images img{width:65px;height:50px;}
+      footer .container{padding:1rem 0;}
     }
   </style>
-
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet" />
 </head>
 <body>
-
 <nav class="navbar navbar-expand-lg">
   <div class="container">
-    <a class="navbar-brand" href="#">CampusMeet</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" 
+    <a class="navbar-brand" href="#"><i class="bi bi-mortarboard-fill"></i>CampusMeet</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu"
       aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-
     <div class="collapse navbar-collapse justify-content-end" id="navMenu">
       <div class="navbar-nav">
         <a href="{% url 'login' %}" class="btn btn-outline-primary me-2">Login</a>
@@ -266,12 +299,18 @@
   </div>
 </nav>
 
+
 <header class="hero">
-  <div class="content">
-    <h1>Welcome to CampusMeet</h1>
-    <p>Your seamless platform for online classes, attendance and study resources.</p>
-    <a href="{% url 'register' %}" class="btn btn-light btn-lg me-3 px-5 py-3">Get Started</a>
-    <a href="{% url 'login' %}" class="btn btn-outline-primary btn-lg px-5 py-3">Login</a>
+  <div class="hero-content">
+    <h1><i class="bi bi-mortarboard"></i>CampusMeet: Empower Your Learning</h1>
+    <p>Your seamless platform for online classes,<br class="d-none d-sm-inline"> attendance and study resources— built to inspire students and educators everywhere.</p>
+    <a href="{% url 'register' %}" class="btn btn-light btn-lg me-3">Get Started</a>
+    <a href="{% url 'login' %}" class="btn btn-outline-primary btn-lg">Login</a>
+    <div class="hero-images">
+      <img src="https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=300&q=80" alt="Class collaboration" />
+      <img src="https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=300&q=80" alt="Online learning" />
+      <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=300&q=80" alt="Professional lecture" />
+    </div>
   </div>
 </header>
 
@@ -281,23 +320,23 @@
   <div class="container">
     <div class="row g-4">
       <div class="col-md-4">
-        <div class="card">
-          <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80" alt="Easy Scheduling" />
-          <h4>Easy Scheduling</h4>
+        <div class="card" style="animation-delay:0.1s;">
+          <img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=800&q=80" alt="Easy Scheduling" />
+          <h4><i class="bi bi-calendar2-week"></i> Easy Scheduling</h4>
           <p>Create, join, and manage your classes with ease.</p>
         </div>
       </div>
       <div class="col-md-4">
-        <div class="card">
-          <img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=600&q=80" alt="Attendance" />
-          <h4>Attendance Tracking</h4>
+        <div class="card" style="animation-delay:0.22s;">
+          <img src="https://images.unsplash.com/photo-1470167290877-7d5d3446de4c?auto=format&fit=crop&w=800&q=80" alt="Attendance" />
+          <h4><i class="bi bi-clipboard-data"></i> Attendance Tracking</h4>
           <p>Keep accurate records of your class attendance.</p>
         </div>
       </div>
       <div class="col-md-4">
-        <div class="card">
-          <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=600&q=80" alt="Notes & Resources" />
-          <h4>Notes & Resources</h4>
+        <div class="card" style="animation-delay:0.37s;">
+          <img src="https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=800&q=80" alt="Notes & Resources" />
+          <h4><i class="bi bi-journal-richtext"></i> Notes & Resources</h4>
           <p>Access study materials anytime, anywhere.</p>
         </div>
       </div>
@@ -306,10 +345,39 @@
 </section>
 
 <footer>
-  &copy; 2025 CampusMeet. All rights reserved.
+  <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between py-3">
+    <div class="d-flex align-items-center mb-2 mb-md-0">
+      <i class="bi bi-mortarboard-fill text-primary fs-4 me-2"></i>
+      <span>&copy; 2025 <strong>CampusMeet</strong></span>
+    </div>
+    <ul class="list-unstyled d-flex mb-0">
+      <li class="ms-3">
+        <a class="text-primary" href="mailto:info@campusmeet.com" title="Email us"><i class="bi bi-envelope-at-fill fs-5"></i></a>
+      </li>
+      <li class="ms-3">
+        <a class="text-primary" href="https://twitter.com/" target="_blank" title="Twitter"><i class="bi bi-twitter-x fs-5"></i></a>
+      </li>
+      <li class="ms-3">
+        <a class="text-primary" href="https://linkedin.com/" target="_blank" title="LinkedIn"><i class="bi bi-linkedin fs-5"></i></a>
+      </li>
+    </ul>
+  </div>
+  <div class="text-center small mt-2">
+    Modern learning for the next generation.
+  </div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+<script>
+  // Animate .features cards with staggered entry
+  const cards = document.querySelectorAll('.features .card');
+  cards.forEach((card, idx) => {
+    card.style.opacity = 0;
+    setTimeout(() => {
+      card.style.opacity = 1;
+      card.style.animation = "fadeInRight .8s cubic-bezier(.11,.91,.55,1.15) forwards";
+    }, 210 + 150 * idx);
+  });
+</script>
 </body>
 </html>
