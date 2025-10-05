@@ -444,12 +444,15 @@ from django.utils.timezone import now
 from django.http import JsonResponse
 import json
 
-@csrf_exempt
 @login_required
+@csrf_exempt
 def attendance_leave(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         meeting_id = data.get('meeting_id')
+        user_profile = getattr(request.user, 'userprofile', None)
+        if not user_profile or user_profile.role != 'student':
+            return JsonResponse({'status': 'error', 'message': 'User is not a student'})
         try:
             attendance = Attendance.objects.get(meeting_id=meeting_id, student=request.user)
             attendance.leave_time = now()
@@ -461,6 +464,7 @@ def attendance_leave(request):
             return JsonResponse({'status': 'error', 'message': 'Attendance record not found'})
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request'})
+
 
 
 

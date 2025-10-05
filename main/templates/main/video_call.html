@@ -52,12 +52,26 @@ window.onload = function () {
         showLayoutButton: true,
     });
 
-    // Send leave event to server when user leaves/closes window
+    // Send leave event to server when user leaves/closes window with proper JSON content type
     window.addEventListener('beforeunload', function () {
-        navigator.sendBeacon("{% url 'attendance_leave' %}", JSON.stringify({
-            meeting_id: roomID
-        }));
+        const payload = JSON.stringify({ meeting_id: roomID });
+        const blob = new Blob([payload], { type: 'application/json' });
+        navigator.sendBeacon("{% url 'attendance_leave' %}", blob);
     });
+
+    // The following code is commented out because zp.on('leaveRoom', ...) is not supported in your version
+    /*
+    zp.on('leaveRoom', () => {
+        fetch("{% url 'attendance_leave' %}", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ meeting_id: roomID }),
+        }).then(res => res.json())
+          .then(data => console.log('Leave recorded:', data))
+          .catch(err => console.error('Leave recording error:', err));
+    });
+    */
 }
 </script>
 </html>
