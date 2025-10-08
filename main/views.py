@@ -95,10 +95,25 @@ from datetime import datetime, time
 
 
 
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
+from django.shortcuts import render
+from .models import Department, Subject, Meeting, Note
+
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
+from django.shortcuts import render
+from django.utils import timezone
+from .models import Department, Subject, Meeting, Note
+
 @login_required
 def faculty_dashboard(request):
-    user_profile = request.user.userprofile
-    department = user_profile.department
+    print('Dashboard view called for user:', request.user)
+    try:
+        user_profile = request.user.userprofile
+        department = user_profile.department
+    except AttributeError:
+        department = None
 
     try:
         if isinstance(department, str):
@@ -113,15 +128,28 @@ def faculty_dashboard(request):
     else:
         subjects = Subject.objects.none()
 
+    # Get ALL meetings (past and future), order with newest first
     meetings = Meeting.objects.filter(subject__faculty=request.user).order_by('-schedule_datetime')
+
     notes = Note.objects.filter(subject__faculty=request.user).order_by('-created_at')
+
+    avg_attendance = 0  # Placeholder for any attendance calculation
+
+    current_time = timezone.now()  # pass current time for template logic
 
     context = {
         'subjects': subjects,
         'meetings': meetings,
         'notes': notes,
+        'avg_attendance': avg_attendance,
+        'section': 'dashboard',
+        'current_time': current_time,
     }
+
     return render(request, 'main/faculty_dashboard.html', context)
+
+
+
 
 
 @login_required

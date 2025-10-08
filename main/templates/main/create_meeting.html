@@ -1,122 +1,145 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Create Meeting - CampusMeet</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #f8fafc;
-      color: #333;
-      padding: 40px 20px;
-      min-height: 100vh;
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .container {
-      background: white;
-      padding: 2.5rem 3rem;
-      border-radius: 20px;
-      max-width: 480px;
-      width: 100%;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      text-align: center;
-    }
-    h1 {
-      color: #007BFF;
-      font-weight: 900;
-      font-size: 2rem;
-      margin-bottom: 2rem;
-      letter-spacing: 1.8px;
-      text-transform: uppercase;
-      user-select: none;
-    }
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 1.3rem;
-      text-align: left;
-    }
-    label {
-      color: #007BFF;
-      font-weight: 600;
-      font-size: 1rem;
-      margin-bottom: 0.4rem;
-      user-select: none;
-    }
-    input, select {
-      border-radius: 10px;
-      border: 2px solid #ddd;
-      padding: 0.65rem 1rem;
-      font-size: 1rem;
-      font-family: inherit;
-      box-sizing: border-box;
-      transition: border-color 0.3s ease;
-      width: 100%;
-    }
-    input:focus, select:focus {
-      outline: none;
-      border-color: #007BFF;
-      box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
-    }
-    button {
-      background-color: #007BFF;
-      border: none;
-      border-radius: 50px;
-      padding: 0.75rem 0;
-      font-weight: 700;
-      font-size: 1.15rem;
-      cursor: pointer;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      box-shadow: 0 10px 30px rgba(0, 123, 255, 0.7);
-      color: white;
-      user-select: none;
-      transition: background-color 0.3s ease;
-      margin-top: 1rem;
-      width: 100%;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-    a.back-link {
-      display: inline-block;
-      margin-top: 2.5rem;
-      font-weight: 600;
-      font-size: 1rem;
-      color: #007BFF;
-      text-decoration: none;
-      user-select: none;
-      transition: color 0.3s ease;
-      width: 100%;
-      text-align: center;
-    }
-    a.back-link:hover {
-      color: #0056b3;
-      text-decoration: underline;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>Create Meeting</h1>
-    <form method="post" novalidate>
+{% extends "main/faculty_base.html" %}
+
+{% block title %}Create Meeting - CampusMeet{% endblock %}
+
+{% block style %}
+<style>
+.create-meeting-page-bg {
+  width: 100%;
+  min-height: 75vh;
+  background: linear-gradient(114deg,#e9f4ff 0%, #eaf0fc 85%);
+  border-radius: 16px;
+  box-shadow: 0 5px 32px rgba(88,113,212,.07);
+  padding: 2.3rem 0 1rem 0;
+  animation: fade-in-bg 0.7s;
+}
+@keyframes fade-in-bg {
+  from { opacity: 0; transform: translateY(32px);}
+  to { opacity: 1; transform: none;}
+}
+.create-meeting-header {
+  font-weight: 900;
+  font-size: 2.2rem;
+  color: #2267cd;
+  letter-spacing: 1.4px;
+  margin-bottom: 1.25rem;
+  user-select: none;
+  text-transform: uppercase;
+  text-align: center;
+  text-shadow: 0 7px 20px #b6dafc10;
+  animation: slidein-head 0.9s;
+}
+@keyframes slidein-head {
+  from { opacity:0; transform: translateY(-24px);}
+  to { opacity:1; transform:none; }
+}
+.create-meeting-body {
+  max-width: 560px;
+  margin: 0 auto;
+  background: transparent;
+  border-radius: 18px;
+  box-shadow: none;
+}
+.create-meeting-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 0.7rem;
+  animation: appear-form 0.76s;
+}
+@keyframes appear-form {
+  from { opacity:0; transform: scale(0.93);}
+  to { opacity:1; transform: none;}
+}
+.create-meeting-form label {
+  color: #205088;
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 0.18rem;
+}
+.create-meeting-form input,
+.create-meeting-form select {
+  border-radius: 13px;
+  border: 1.7px solid #d6e6fa;
+  background: #f3f7fc;
+  padding: 0.83rem 1.2rem;
+  font-size: 1.04rem;
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.14s, box-shadow 0.14s, background 0.2s;
+  outline: none;
+  margin-bottom: 0.06rem;
+}
+.create-meeting-form input:focus,
+.create-meeting-form select:focus {
+  border-color: #2196f3;
+  background: #eefaff;
+  box-shadow: 0 2px 14px #2196f345;
+}
+.create-meeting-form button {
+  background: linear-gradient(90deg,#2267cd 70%, #23c8fa 100%);
+  border: none;
+  border-radius: 60px;
+  padding: 1rem 0;
+  font-weight: 900;
+  font-size: 1.12rem;
+  cursor: pointer;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: white;
+  box-shadow: 0 6px 28px #2267cd32;
+  margin-top: 1.3rem;
+  width: 100%;
+  transition: background 0.19s, color 0.14s, box-shadow 0.13s;
+  animation: bounce-btn 1.3s;
+}
+@keyframes bounce-btn {
+  0% { transform: scale(.87);}
+  60% { transform: scale(1.04);}
+  100% { transform: scale(1);}
+}
+.create-meeting-form button:active {
+  background: linear-gradient(90deg,#1c52a4 80%, #0fd2ff 100%);
+  color: #fafbfc;
+  box-shadow: 0 3px 12px #2196f369;
+}
+.meeting-back-link {
+  margin-top: 2.3rem;
+  display: block;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #2267cd;
+  text-align: center;
+  text-decoration: none;
+  letter-spacing: 0.7px;
+  transition: color .17s;
+}
+.meeting-back-link:hover {
+  color: #174d90;
+  text-decoration: underline;
+}
+@media (max-width: 700px) {
+  .create-meeting-body { max-width: 97vw; }
+  .create-meeting-header { font-size: 1.18rem; }
+  .create-meeting-form { gap: 0.82rem;}
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="create-meeting-page-bg">
+  <div class="create-meeting-body">
+    <div class="create-meeting-header">Create Meeting</div>
+    <form method="post" novalidate class="create-meeting-form">
       {% csrf_token %}
       {{ form.subject.label_tag }}
       {{ form.subject }}
-
       <label for="id_schedule_datetime">Scheduled Date & Time</label>
       <input type="datetime-local" name="schedule_datetime" id="id_schedule_datetime" required />
-
       <button type="submit">Create Meeting</button>
     </form>
-    <a href="{% url 'faculty_dashboard' %}" class="back-link" aria-label="Back to dashboard">← Back to Dashboard</a>
+    <a href="{% url 'faculty_dashboard' %}" class="meeting-back-link" aria-label="Back to dashboard">← Back to Dashboard</a>
   </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+</div>
+{% endblock %}
