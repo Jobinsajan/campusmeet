@@ -33,7 +33,7 @@ ALLOWED_HOSTS = ['172.20.4.208', 'localhost', '127.0.0.1','campusmeet-j6qc.onren
 # Application definition
 
 INSTALLED_APPS = [
-    'corsheaders'
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
