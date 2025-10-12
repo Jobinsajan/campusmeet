@@ -1,26 +1,169 @@
 {% extends "main/base.html" %}
+
+{% block extra_style %}
+<style>
+  /* Card layout for Attendance */
+  .attendance-card {
+    background: #f8fafc;
+    border-radius: 20px;
+    box-shadow: 0 12px 28px rgba(41, 128, 185, 0.12);
+    margin-top: 2rem;
+    padding: 1.8rem;
+  }
+
+  .attendance-card h2 {
+    color: #2980b9;
+    font-weight: 900;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Filter dropdown */
+  #subjectFilter {
+    border-radius: 12px;
+    padding: 0.35rem 0.8rem;
+    border: 2px solid #2980b9;
+    background-color: #fff;
+    color: #2980b9;
+    font-weight: 600;
+    transition: 0.3s;
+  }
+
+  #subjectFilter:hover, #subjectFilter:focus {
+    background-color: #e3f2fd;
+    outline: none;
+    border-color: #1c5980;
+  }
+
+  /* Table styling */
+  .attendance-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 0.75rem;
+    margin-top: 1.5rem;
+  }
+
+  .attendance-table th {
+    background: #2980b9;
+    color: #fff;
+    font-weight: 700;
+    border: none;
+    padding: 0.75rem 1rem;
+    border-radius: 12px 12px 0 0;
+  }
+
+  .attendance-table td {
+    background: #fff;
+    padding: 0.75rem 1rem;
+    text-align: center;
+    border: none;
+    font-weight: 500;
+    vertical-align: middle;
+  }
+
+  .attendance-table tbody tr {
+    transition: transform 0.3s, box-shadow 0.3s;
+    border-radius: 12px;
+    display: table-row;
+  }
+
+  .attendance-table tbody tr:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 24px rgba(41, 128, 185, 0.2);
+  }
+
+  /* Badges for attendance status */
+  .badge-present {
+    background-color: #28a745;
+    color: #fff;
+    padding: 0.45rem 0.9rem;
+    border-radius: 12px;
+    font-weight: 600;
+  }
+
+  .badge-absent {
+    background-color: #e74c3c;
+    color: #fff;
+    padding: 0.45rem 0.9rem;
+    border-radius: 12px;
+    font-weight: 600;
+  }
+
+  @media (max-width: 768px) {
+    .attendance-card {
+      padding: 1rem;
+    }
+    .attendance-table th, .attendance-table td {
+      font-size: 0.85rem;
+      padding: 0.5rem 0.6rem;
+    }
+  }
+</style>
+{% endblock %}
+
 {% block content %}
-<h2>Your Attendance</h2>
-{% if attendances %}
-<table class="table table-bordered">
-  <thead>
-    <tr>
-      <th>Subject</th>
-      <th>Schedule</th>
-      <th>Status</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for attendance in attendances %}
-    <tr>
-      <td>{{ attendance.meeting.subject.name }}</td>
-      <td>{{ attendance.meeting.schedule_datetime|date:"Y-m-d H:i" }}</td>
-      <td>{% if attendance.present %}Present{% else %}Absent{% endif %}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% else %}
-<p>No attendance records available.</p>
-{% endif %}
+<div class="container">
+  <div class="attendance-card">
+    <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
+      <h2><i class="bi bi-clipboard-data"></i> Your Attendance</h2>
+      <div class="d-flex align-items-center gap-2">
+        <label for="subjectFilter" class="mb-0 fw-semibold">Filter:</label>
+        <select id="subjectFilter">
+          <option value="all" selected>All Subjects</option>
+          {% for subject in attendances|dictsort:"meeting.subject.name" %}
+            {% ifchanged subject.meeting.subject.name %}
+              <option value="{{ subject.meeting.subject.name }}">{{ subject.meeting.subject.name }}</option>
+            {% endifchanged %}
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    {% if attendances %}
+    <table class="attendance-table">
+      <thead>
+        <tr>
+          <th>Subject</th>
+          <th>Schedule</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for attendance in attendances %}
+        <tr data-subject="{{ attendance.meeting.subject.name }}">
+          <td>{{ attendance.meeting.subject.name }}</td>
+          <td>{{ attendance.meeting.schedule_datetime|date:"Y-m-d H:i" }}</td>
+          <td>
+            {% if attendance.present %}
+              <span class="badge-present">Present</span>
+            {% else %}
+              <span class="badge-absent">Absent</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="text-center text-muted mt-4">No attendance records available.</p>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  document.getElementById('subjectFilter').addEventListener('change', function () {
+    const selectedSubject = this.value.toLowerCase();
+    const rows = document.querySelectorAll('.attendance-table tbody tr');
+    rows.forEach(row => {
+      const subject = row.getAttribute('data-subject').toLowerCase();
+      if (selectedSubject === 'all' || subject === selectedSubject) {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+      }
+    });
+  });
+</script>
 {% endblock %}

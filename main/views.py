@@ -415,6 +415,7 @@ from .models import Note  # assuming you have a Note model
 from django.shortcuts import render, get_object_or_404
 from .models import Note, Attendance, Notification, Subject, Meeting
 
+
 def student_dashboard(request):
     user = request.user
     department = user.userprofile.department
@@ -428,6 +429,12 @@ def student_dashboard(request):
     # Attendance records for the student
     attendances = Attendance.objects.filter(student=user).order_by('-meeting__schedule_datetime')
 
+    # Attendance stats
+    total_attendance_records = attendances.count()
+    present_count = attendances.filter(present=True).count()
+    absent_count = attendances.filter(present=False).count()
+    total_attendance = int((present_count / total_attendance_records) * 100) if total_attendance_records > 0 else 0
+
     # Notes for the department subjects
     notes = Note.objects.filter(subject__department=department).order_by('-created_at')[:5]
 
@@ -439,8 +446,12 @@ def student_dashboard(request):
         'attendances': attendances,
         'notes': notes,
         'notifications': notifications,
+        'total_attendance': total_attendance,
+        'present_count': present_count,
+        'absent_count': absent_count,
     }
     return render(request, 'main/student_dashboard.html', context)
+
 
 def student_notes(request):
     department = request.user.userprofile.department

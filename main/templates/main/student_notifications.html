@@ -1,16 +1,60 @@
 {% extends "main/base.html" %}
+
 {% block content %}
-<h2>Your Notifications</h2>
+<h2 class="mb-4">Your Notifications</h2>
+
 {% if notifications %}
-<ul class="list-group">
+<div class="row g-3">
   {% for notification in notifications %}
-  <li class="list-group-item d-flex justify-content-between align-items-center">
-    <div>{{ notification.message }}</div>
-    <small class="text-muted">{{ notification.created_at|timesince }} ago</small>
-  </li>
+  <div class="col-12">
+    <div class="card shadow-sm border-0 p-3 d-flex flex-row align-items-center notification-card">
+      <div class="icon-wrapper me-3">
+        <i class="bi bi-bell-fill text-primary fs-4"></i>
+      </div>
+      <div class="notification-content flex-grow-1">
+        <p class="mb-1">{{ notification.message }}</p>
+        <small class="text-muted">{{ notification.created_at|timesince }} ago</small>
+      </div>
+    </div>
+  </div>
   {% endfor %}
-</ul>
+</div>
 {% else %}
-<p>No notifications yet.</p>
+<div class="alert alert-info text-center">
+  <i class="bi bi-info-circle me-2"></i>No notifications yet.
+</div>
 {% endif %}
+
+<style>
+  .notification-card {
+    transition: transform 0.3s, box-shadow 0.3s;
+    border-left: 4px solid #2980b9;
+    border-radius: 12px;
+    background-color: #f9fafc;
+  }
+
+  .notification-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(41, 128, 185, 0.25);
+  }
+
+  .icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background: #e3f2fd;
+    border-radius: 50%;
+  }
+
+  .notification-content p {
+    font-weight: 500;
+    margin: 0;
+  }
+
+  .notification-content small {
+    font-size: 0.85rem;
+  }
+</style>
 {% endblock %}

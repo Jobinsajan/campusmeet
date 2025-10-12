@@ -1,18 +1,105 @@
 {% extends "main/base.html" %}
+{% load static %}
+{% block title %}Your Notes | CampusMeet{% endblock %}
+
 {% block content %}
-<h2>Your Notes</h2>
-{% if notes %}
-<ul class="list-group">
-  {% for note in notes %}
-  <li class="list-group-item d-flex justify-content-between align-items-center">
-    <div>{{ note.title }} <small class="text-muted">({{ note.created_at|date:"Y-m-d H:i" }})</small></div>
-    {% if note.file %}
-    <a href="{{ note.file.url }}" download class="btn btn-sm btn-outline-primary">Download</a>
-    {% endif %}
-  </li>
-  {% endfor %}
-</ul>
-{% else %}
-<p>No notes available.</p>
-{% endif %}
+<div class="notes-section">
+  <h2 class="section-title">
+    <i class="bi bi-journal-text me-2"></i>Your Notes
+  </h2>
+
+  {% if notes %}
+  <div class="notes-list mt-4">
+    {% for note in notes %}
+    <div class="note-item">
+      <div class="note-header d-flex justify-content-between align-items-center">
+        <h5 class="note-title mb-0">
+          <i class="bi bi-file-earmark-text me-2"></i>{{ note.title }}
+        </h5>
+        <small class="text-muted">
+          <i class="bi bi-calendar3"></i> {{ note.created_at|date:"M d, Y" }}
+          &nbsp;|&nbsp;
+          <i class="bi bi-clock"></i> {{ note.created_at|date:"h:i A" }}
+        </small>
+      </div>
+      <div class="note-footer mt-2">
+        {% if note.file %}
+        <a href="{{ note.file.url }}" download class="btn btn-sm btn-download">
+          <i class="bi bi-download me-1"></i>Download
+        </a>
+        {% else %}
+        <span class="text-danger small">No file attached</span>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="no-notes text-center">
+    <img src="{% static 'images/no_notes.svg' %}" alt="No Notes" width="150" class="mb-3" />
+    <h5 class="text-muted">No notes available yet.</h5>
+  </div>
+  {% endif %}
+</div>
+
+<style>
+  .notes-section {
+    background: #fff;
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+  }
+
+  .section-title {
+    font-weight: 700;
+    color: #2980b9;
+    font-size: 1.6rem;
+    border-left: 5px solid #2980b9;
+    padding-left: 12px;
+  }
+
+  .notes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .note-item {
+    background: #f9fbfd;
+    border-left: 5px solid #2980b9;
+    border-radius: 12px;
+    padding: 1.2rem 1.5rem;
+    transition: all 0.25s ease;
+  }
+
+  .note-item:hover {
+    transform: translateX(6px);
+    background: #eef6fc;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+  }
+
+  .note-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #2c3e50;
+  }
+
+  .note-footer .btn-download {
+    background: #2980b9;
+    color: white;
+    font-weight: 600;
+    border-radius: 30px;
+    padding: 6px 14px;
+    transition: 0.3s ease;
+  }
+
+  .note-footer .btn-download:hover {
+    background: #216397;
+    transform: scale(1.05);
+  }
+
+  .no-notes {
+    padding: 3rem 0;
+  }
+</style>
 {% endblock %}
