@@ -16,45 +16,55 @@ from .models import (
 from .forms import NoteForm, MeetingForm, ProfileForm
 
 
+from django.db import transaction, IntegrityError
+from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
+from django.contrib import messages
+
 from .models import Department, UserProfile
 
 def register(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
-        email = request.POST.get('email')
+        username = request.POST.get('username', '').strip()
+        email = request.POST.get('email', '').strip()
         password = request.POST.get('password')
         password2 = request.POST.get('password2')
         department_id = request.POST.get('department')
 
-        # Username uniqueness check
-        if User.objects.filter(username=username).exists():
+        if User.objects.filter(username__iexact=username).exists():
             messages.error(request, 'Username already exists. Please choose a different username.')
             return redirect('register')
-
-        # Password matching check
+        if User.objects.filter(email__iexact=email).exists():
+            messages.error(request, 'Email already exists. Please use a different email.')
+            return redirect('register')
         if password != password2:
             messages.error(request, 'Passwords do not match.')
             return redirect('register')
-
-        # Department selected check
         if not department_id:
             messages.error(request, 'Please select a department.')
             return redirect('register')
 
-        # Create user
-        user = User.objects.create_user(username=username, email=email, password=password)
-        user.save()
-
-        # Assign department in user profile
-        department = Department.objects.get(id=department_id)
-        UserProfile.objects.create(user=user, department=department, role='student')
+        try:
+            with transaction.atomic():
+                department = Department.objects.get(id=department_id)
+                user = User.objects.create_user(username=username, email=email, password=password)
+                UserProfile.objects.create(user=user, department=department, role='student')
+        except Department.DoesNotExist:
+            messages.error(request, 'Selected department does not exist.')
+            return redirect('register')
+        except IntegrityError:
+            messages.error(request, 'An error occurred during registration. Please try a different username/email.')
+            return redirect('register')
+        except Exception as e:
+            messages.error(request, f'Unexpected error: {str(e)}')
+            return redirect('register')
 
         messages.success(request, 'Account created successfully! Please log in.')
         return redirect('login')
-
     else:
         departments = Department.objects.all()
         return render(request, 'main/register.html', {'departments': departments})
+
 
 
 
